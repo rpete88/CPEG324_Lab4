@@ -53,7 +53,7 @@ architecture arch of reg_file is
 	signal output_11:	std_logic_vector(7 downto 0):= "00000000";
 
 begin
-	process(CLK)
+	process(ws)
 	begin
 		case ws is
 			when "00"=>
