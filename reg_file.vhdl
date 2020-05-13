@@ -20,7 +20,7 @@ entity reg_file is
 	);
 end reg_file;
 
-architecture  arch of reg_file is
+architecture arch of reg_file is
 	-- we must have 4 reg (flip flops)
 	component reg is
 		port(
@@ -53,37 +53,41 @@ architecture  arch of reg_file is
 	signal output_11:	std_logic_vector(7 downto 0):= "00000000";
 
 begin
-	case ws is
-		when "00"=>
-			input_00 <= wd;
-			en_00 <= we;
-			en_01 <= '0';
-			en_10 <= '0';
-			en_11 <= '0';
-		when "01"=>
-			input_01 <= wd;
-			en_00 <= '0';
-			en_01 <= we;
-			en_10 <= '0';
-			en_11 <= '0';
-
-		when "10"=>
-			input_10 <= wd;
-			en_00 <= '0';
-			en_01 <= '0';
-			en_10 <= we;
-			en_11 <= '0';
-
-		when "11"=>
-			input_11 <= wd;
-			en_00 <= '0';
-			en_01 <= '0';
-			en_10 <= '0';
-			en_11 <= we;
-		when others=>
-			--nothing
-	end case;
-
+	process(CLK)
+	begin
+		case ws is
+			when "00"=>
+				input_00 <= wd;
+				en_00 <= we;
+				en_01 <= '0';
+				en_10 <= '0';
+				en_11 <= '0';
+			when "01"=>
+				input_01 <= wd;
+				en_00 <= '0';
+				en_01 <= we;
+				en_10 <= '0';
+				en_11 <= '0';
+			when "10"=>
+				input_10 <= wd;
+				en_00 <= '0';
+				en_01 <= '0';
+				en_10 <= we;
+				en_11 <= '0';
+			when "11"=>
+				input_11 <= wd;
+				en_00 <= '0';
+				en_01 <= '0';
+				en_10 <= '0';
+				en_11 <= we;
+			when others=>
+				--nothing
+				en_00 <= '0';
+				en_01 <= '0';
+				en_10 <= '0';
+				en_11 <= '0';
+		end case;
+	end process;
 	reg_00:	reg port map(input_00, CLK, en_00, output_00);
 	reg_01:	reg port map(input_01, CLK, en_01, output_01);
 	reg_10:	reg port map(input_10, CLK, en_10, output_10);
@@ -92,6 +96,4 @@ begin
 	MUX:	reg_MUX port map(rs1, rs2, output_00, output_01, output_10, output_11, rd1, rd2);
 
 end arch;
-
-
 
