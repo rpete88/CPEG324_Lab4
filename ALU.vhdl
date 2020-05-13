@@ -18,24 +18,29 @@ entity ALU is
 end ALU;
 
 architecture behav of ALU is
+	component CRA is -- carry ripple adder
+		port ( 	a:	in std_logic_vector (31 downto 0);
+			b:	in std_logic_vector (31 downto 0);
+			ci:	in std_logic;
+			s:	out std_logic_vector (31 downto 0);
+			co:	out std_logic
+		     );
+	end component;
+
+	signal notB:	std_logic_vector(31 downto 0);
+	signal sum:	std_logic_vector(31 downto 0);
+	signal diff:	std_logic_vector(31 downto 0);
+	signal s_carry:	std_logic;
+	signal d_carry:	std_logic;
 begin
-	process(A, B, OP)
-	begin
-		case OP is
-			when "00" =>
-				O <= A + B;
-			when "01" =>
-				O <= A - B;
-			when "10" =>
-				-- do nothing
-			when "11" =>
-				if (A = B) then
-					EQ = '1';
-				else
-					EQ = '0';
-				end if;
-			when others =>
-				-- do nothing
-		end case;
-	end process;
+	notB <= not B;
+
+	adder: CRA port map(A, B, '0', sum, s_carry);
+	subtractor: CRA port map(A, notB, '1', diff, d_carry);
+
+	O <=	sum	when OP = "00" else
+	     	diff	when OP = "01" else
+		"ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ";
+	EQ <=	'1' when A=B else
+	      	'0';
 end behav;
