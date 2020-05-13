@@ -29,6 +29,7 @@ begin
 					op <= "11";
 				else --funct set to 0 for dis
 					op <= "10";
+				end if;
 			when others =>
 				op <= "10";
 		end case;
