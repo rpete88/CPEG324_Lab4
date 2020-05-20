@@ -11,7 +11,7 @@ use ieee.std_logic_1164.all;
 entity reg_file is
 	port(	rs1:	in std_logic_vector(1 downto 0); --select for register file output 1
 		rs2:	in std_logic_vector(1 downto 0); --select for register file output 2
-	        ws:	in std_logic_vector(1 downto 0); --writing select
+	    	ws:	in std_logic_vector(1 downto 0); --writing select
 		wd:	in std_logic_vector(7 downto 0); --writing data
 		CLK:	in std_logic; --clock
 		we:	in std_logic; --writing enable
@@ -27,8 +27,8 @@ architecture arch of reg_file is
 		port(
 			d:	in std_logic_vector(7 downto 0);
 			clk:	in std_logic;
-			en:	in std_logic;
-			rst:	in std_logic;
+            		en:	in std_logic;
+            		reset: in std_logic;
 			q:	out std_logic_vector(7 downto 0)
 		);
 	end component;
@@ -52,7 +52,8 @@ architecture arch of reg_file is
 	signal output_00:	std_logic_vector(7 downto 0):= "00000000";
 	signal output_01:	std_logic_vector(7 downto 0):= "00000000";
 	signal output_10:	std_logic_vector(7 downto 0):= "00000000";
-	signal output_11:	std_logic_vector(7 downto 0):= "00000000";
+    	signal output_11:	std_logic_vector(7 downto 0):= "00000000";
+    	signal reset:       	std_logic:= '1';
 
 begin
 	process(ws)
@@ -63,39 +64,43 @@ begin
 				en_00 <= we;
 				en_01 <= '0';
 				en_10 <= '0';
-				en_11 <= '0';
+                		en_11 <= '0';
+                		reset <= '0';
 			when "01"=>
 				input_01 <= wd;
 				en_00 <= '0';
 				en_01 <= we;
 				en_10 <= '0';
-				en_11 <= '0';
+                		en_11 <= '0';
+                		reset <= '0';
 			when "10"=>
 				input_10 <= wd;
 				en_00 <= '0';
 				en_01 <= '0';
 				en_10 <= we;
-				en_11 <= '0';
+                		en_11 <= '0';
+                		reset <= '0';
 			when "11"=>
 				input_11 <= wd;
 				en_00 <= '0';
 				en_01 <= '0';
 				en_10 <= '0';
-				en_11 <= we;
+                		en_11 <= we;
+                		reset <= '0';
 			when others=>
 				--nothing
 				en_00 <= '0';
 				en_01 <= '0';
 				en_10 <= '0';
-				en_11 <= '0';
+               			en_11 <= '0';
+                		reset <= '0';
 		end case;
 	end process;
-	reg_00:	reg port map(input_00, CLK, en_00, rst, output_00);
-	reg_01:	reg port map(input_01, CLK, en_01, rst, output_01);
-	reg_10:	reg port map(input_10, CLK, en_10, rst, output_10);
-	reg_11:	reg port map(input_11, CLK, en_11, rst, output_11);
+	reg_00:	reg port map(input_00, CLK, en_00, reset, output_00);
+	reg_01:	reg port map(input_01, CLK, en_01, reset, output_01);
+	reg_10:	reg port map(input_10, CLK, en_10, reset, output_10);
+	reg_11:	reg port map(input_11, CLK, en_11, reset, output_11);
 
-	MUX:	reg_MUX port map(rs1, rs2, output_00, output_01, output_10, output_11, rd1, rd2);
+	MUX: reg_MUX port map(rs1, rs2, output_00, output_01, output_10, output_11, rd1, rd2);
 
 end arch;
-
