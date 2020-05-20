@@ -1,57 +1,51 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity reg_file_tb is
-end reg_file_tb;
+entity reg_tb is
+end reg_tb;
 
-architecture behav of reg_file_tb is
-component reg_file
-port (		rs1: in std_logic_vector(1 downto 0); --select for register file output 1
-            rs2: in std_logic_vector(1 downto 0); --select for register file output 2
-            ws:	in std_logic_vector(1 downto 0); --writing select
-            wd:	in std_logic_vector(7 downto 0); --writing data
-            CLK: in std_logic; --clock
-            we:	in std_logic; --writing enable
-            rd1: out std_logic_vector(7 downto 0); --output 1 of register file
-            rd2: out std_logic_vector(7 downto 0) -- output 2 of register file
+architecture behav of reg_tb is
+component reg
+port (	D: in std_logic_vector(7 downto 0);
+CLK, EN, RESET: in std_logic;
+Q: out std_logic_vector(7 downto 0)
 );
 end component;
-signal wd, rd1, rd2 : std_logic_vector(7 downto 0);
-signal CLK, we : std_logic;
-signal ws, rs1, rs2 : std_logic_vector(1 downto 0);
+signal d, q : std_logic_vector(7 downto 0);
+signal clock, enable, reset : std_logic;
 begin
 --  Component instantiation.
-reg_file_0: reg_file port map (rs1 => rs1, rs2 => rs2, ws => ws, wd => wd, CLK => CLK, we => we, rd1 => rd1, rd2 => rd2);
+reg_0: reg port map (D => d, CLK => clock, EN => enable, RESET => reset, Q => q);
 
+--  This process does the real job.
 process
 type pattern_type is record
---  The inputs of the reg_file.
-rs1, rs2, ws: std_logic_vector(1 downto 0);
-wd: std_logic_vector (7 downto 0);
-CLK, we: std_logic;
---  The expected outputs of the shift_reg.
-rd1, rd2: std_logic_vector (7 downto 0);
+--these below are what is in our for loop
+d: std_logic_vector (7 downto 0);
+clock, enable, reset: std_logic;
+q: std_logic_vector (7 downto 0);
 end record;
 --  The patterns to apply.
 type pattern_array is array (natural range <>) of pattern_type;
 constant patterns : pattern_array :=
----rs1---rs2---ws-------wd------CLK---we------rd1--------rd2---
-(("00", "00", "00", "00000000", '0', '0', "00000000", "00000000"),
-("00", "00", "00", "00000000", '0', '0', "00000000", "00000000")
-
+(("00000000", '0', '0', '1', "00000000"),
+("00000000", '1', '1', '0', "00000000"),
+("00000000", '1', '1', '0', "00000000"),
+("00000000", '0', '0', '0', "00000000"),
+("10000101", '1', '1', '0', "10000101"),
+("10000101", '0', '1', '0', "10000101"),
+("10000100", '1', '0', '0', "10000101")
 );
 begin
+--  Check each pattern.
 for n in patterns'range loop
 --  Set the inputs.
-rs1 <= patterns(n).rs1;
-rs2 <= patterns(n).rs2;
-ws <= patterns(n).ws;
-wd <= patterns(n).wd;
-CLK <= patterns(n).CLK;
-we <= patterns(n).we;
+d <= patterns(n).d;
+clock <= patterns(n).clock;
+enable <= patterns(n).enable;
+reset <= patterns(n).reset;
 wait for 1 ns;
-assert rd1 = patterns(n).rd1;
-assert rd2 = patterns(n).rd2;
+assert q = patterns(n).q
 report "bad output value" severity error;
 end loop;
 assert false report "end of test" severity note;
