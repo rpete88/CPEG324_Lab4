@@ -15,6 +15,7 @@ entity reg_file is
 		wd:	in std_logic_vector(7 downto 0); --writing data
 		CLK:	in std_logic; --clock
 		we:	in std_logic; --writing enable
+		rst:	in std_logic; --reset
 		rd1:	out std_logic_vector(7 downto 0); --output 1 of register file
 		rd2:	out std_logic_vector(7 downto 0) -- output 2 of register file
 	);
@@ -27,6 +28,7 @@ architecture arch of reg_file is
 			d:	in std_logic_vector(7 downto 0);
 			clk:	in std_logic;
 			en:	in std_logic;
+			rst:	in std_logic;
 			q:	out std_logic_vector(7 downto 0)
 		);
 	end component;
@@ -88,10 +90,10 @@ begin
 				en_11 <= '0';
 		end case;
 	end process;
-	reg_00:	reg port map(input_00, CLK, en_00, output_00);
-	reg_01:	reg port map(input_01, CLK, en_01, output_01);
-	reg_10:	reg port map(input_10, CLK, en_10, output_10);
-	reg_11:	reg port map(input_11, CLK, en_11, output_11);
+	reg_00:	reg port map(input_00, CLK, en_00, rst, output_00);
+	reg_01:	reg port map(input_01, CLK, en_01, rst, output_01);
+	reg_10:	reg port map(input_10, CLK, en_10, rst, output_10);
+	reg_11:	reg port map(input_11, CLK, en_11, rst, output_11);
 
 	MUX:	reg_MUX port map(rs1, rs2, output_00, output_01, output_10, output_11, rd1, rd2);
 

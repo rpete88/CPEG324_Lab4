@@ -11,7 +11,8 @@ use ieee.std_logic_1164.all;
 entity reg is
 port(		D:	in std_logic_vector(7 downto 0); --input of flip-flop
 		CLK:	in std_logic; --rising edge triggered
-		EN:	in std_logic;
+		EN:	in std_logic; --enable
+		RST:	in std_logic; --reset
 		Q:	out std_logic_vector(7 downto 0) --output of flop-flop
 );
 end reg;
@@ -24,6 +25,9 @@ begin
 			if( EN = '1' ) then
 				Q <= D;
 			end if;
+		end if;
+		if( RST = '1') then
+			Q <= "00000000";
 		end if;
 	end process;
 end behav;
