@@ -56,6 +56,7 @@ architecture arch of reg_file is
     	signal reset:       	std_logic:= '1';
 
 begin
+	reset <= rst;
 	process(ws)
 	begin
 		case ws is
