@@ -29,7 +29,7 @@ type pattern_type is record
 rs1, rs2, ws: std_logic_vector(1 downto 0);
 wd: std_logic_vector (7 downto 0);
 CLK, we: std_logic;
---  The expected outputs of the shift_reg.
+--  The expected outputs of the reg_file.
 rd1, rd2: std_logic_vector (7 downto 0);
 end record;
 --  The patterns to apply.
@@ -50,8 +50,9 @@ wd <= patterns(n).wd;
 CLK <= patterns(n).CLK;
 we <= patterns(n).we;
 wait for 1 ns;
-assert rd1 = patterns(n).rd1;
-assert rd2 = patterns(n).rd2;
+assert rd1 = patterns(n).rd1
+report "bad output value" severity error;
+assert rd2 = patterns(n).rd2
 report "bad output value" severity error;
 end loop;
 assert false report "end of test" severity note;
