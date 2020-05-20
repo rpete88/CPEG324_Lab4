@@ -65,7 +65,6 @@ begin
 				en_01 <= '0';
 				en_10 <= '0';
                 		en_11 <= '0';
-                		reset <= '0';
 			when "01"=>
 				input_00 <= output_00;
 				input_01 <= wd;
@@ -75,7 +74,6 @@ begin
 				en_01 <= we;
 				en_10 <= '0';
                 		en_11 <= '0';
-                		reset <= '0';
 			when "10"=>
 				input_00 <= output_00;
 				input_01 <= output_01;
@@ -85,7 +83,6 @@ begin
 				en_01 <= '0';
 				en_10 <= we;
                 		en_11 <= '0';
-                		reset <= '0';
 			when "11"=>
 				input_00 <= output_00;
 				input_01 <= output_01;
@@ -95,7 +92,6 @@ begin
 				en_01 <= '0';
 				en_10 <= '0';
                 		en_11 <= we;
-                		reset <= '0';
 			when others=>
 				--nothing
 				input_00 <= output_00;
