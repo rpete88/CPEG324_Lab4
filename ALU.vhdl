@@ -21,9 +21,9 @@ architecture behav of ALU is
 	component CRA is -- carry ripple adder
 		port ( 	a:	in std_logic_vector (7 downto 0);
 			b:	in std_logic_vector (7 downto 0);
-			ci:	in std_logic;
+			cin:	in std_logic;
 			s:	out std_logic_vector (7 downto 0);
-			co:	out std_logic
+			cout:	out std_logic
 		     );
 	end component;
 
@@ -32,15 +32,17 @@ architecture behav of ALU is
 	signal diff:	std_logic_vector(7 downto 0);
 	signal s_carry:	std_logic;
 	signal d_carry:	std_logic;
+	signal zero: std_logic:= '0';
+	signal one: std_logic:= '1';
 begin
 	notB <= not B;
 
-	adder: CRA port map(A, B, '0', sum, s_carry);
-	subtractor: CRA port map(A, notB, '1', diff, d_carry);
+	adder: CRA port map(A, B, zero, sum, s_carry);
+	subtractor: CRA port map(A, notB, one, diff, d_carry);
 
 	O <=	sum	when OP = "00" else
-	     	diff	when OP = "01" else
-		"ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ";
+	     	diff when OP = "01" else
+		"ZZZZZZZZ";
 	EQ <=	'1' when A=B else
 	      	'0';
 end behav;
