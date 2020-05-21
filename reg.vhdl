@@ -10,7 +10,7 @@ use ieee.std_logic_1164.all;
 
 entity reg is
 port(		D:	in std_logic_vector(7 downto 0); --input of flip-flop
-		CLK:	in std_logic; --rising edge triggered
+		CLK:	in std_logic; --falling edge triggered
         	EN:	in std_logic; --enable
 		Q:	out std_logic_vector(7 downto 0) --output of flop-flop
 );
@@ -20,7 +20,7 @@ architecture behav of reg is
 begin
 	process(CLK)
 	begin
-            if( CLK'event and CLK = '1' ) then
+            if( CLK'event and CLK = '0' ) then
 		    if( EN = '1' ) then
 			    Q <= D;
 		    end if;
