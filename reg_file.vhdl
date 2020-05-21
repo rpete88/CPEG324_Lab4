@@ -53,56 +53,67 @@ architecture arch of reg_file is
     	signal output_11:	std_logic_vector(7 downto 0):= "00000000";
 
 begin
-	process(ws)
+	process(CLK)
 	begin
-		case ws is
-			when "00"=>
-				input_00 <= wd;
-				input_01 <= output_01;
-				input_10 <= output_10;
-				input_11 <= output_11;
-				en_00 <= we;
-				en_01 <= '0';
-				en_10 <= '0';
-                		en_11 <= '0';
-			when "01"=>
-				input_00 <= output_00;
-				input_01 <= wd;
-				input_10 <= output_10;
-				input_11 <= output_11;
-				en_00 <= '0';
-				en_01 <= we;
-				en_10 <= '0';
-                		en_11 <= '0';
-			when "10"=>
-				input_00 <= output_00;
-				input_01 <= output_01;
-				input_10 <= wd;
-				input_11 <= output_11;
-				en_00 <= '0';
-				en_01 <= '0';
-				en_10 <= we;
-                		en_11 <= '0';
-			when "11"=>
-				input_00 <= output_00;
-				input_01 <= output_01;
-				input_10 <= output_10;
-				input_11 <= wd;
-				en_00 <= '0';
-				en_01 <= '0';
-				en_10 <= '0';
-                		en_11 <= we;
-			when others=>
-				--nothing
-				input_00 <= output_00;
-				input_01 <= output_01;
-				input_10 <= output_10;
-				input_11 <= output_11;
-				en_00 <= '0';
-				en_01 <= '0';
-				en_10 <= '0';
-               			en_11 <= '0';
-		end case;
+		if( CLK'event and CLK = '1') then
+			case ws is
+				when "00"=>
+					input_00 <= wd;
+					input_01 <= output_01;
+					input_10 <= output_10;
+					input_11 <= output_11;
+					en_00 <= we;
+					en_01 <= '0';
+					en_10 <= '0';
+	       	         		en_11 <= '0';
+				when "01"=>
+					input_00 <= output_00;
+					input_01 <= wd;
+					input_10 <= output_10;
+					input_11 <= output_11;
+					en_00 <= '0';
+					en_01 <= we;
+					en_10 <= '0';
+                			en_11 <= '0';
+				when "10"=>
+					input_00 <= output_00;
+					input_01 <= output_01;
+					input_10 <= wd;
+					input_11 <= output_11;
+					en_00 <= '0';
+					en_01 <= '0';
+					en_10 <= we;
+               		 		en_11 <= '0';
+				when "11"=>
+					input_00 <= output_00;
+					input_01 <= output_01;
+					input_10 <= output_10;
+					input_11 <= wd;
+					en_00 <= '0';
+					en_01 <= '0';
+					en_10 <= '0';
+            				en_11 <= we;
+				when others=>
+					--nothing
+					input_00 <= output_00;
+					input_01 <= output_01;
+					input_10 <= output_10;
+					input_11 <= output_11;
+					en_00 <= '0';
+					en_01 <= '0';
+					en_10 <= '0';
+               				en_11 <= '0';
+			end case;
+		else
+			input_00 <= output_00;
+			input_01 <= output_01;
+			input_10 <= output_10;
+			input_11 <= output_11;
+			en_00 <= '0';
+			en_01 <= '0';
+			en_10 <= '0';
+			en_11 <= '0';
+		end if;
 	end process;
 	reg_00:	reg port map(input_00, CLK, en_00, output_00);
 	reg_01:	reg port map(input_01, CLK, en_01, output_01);
